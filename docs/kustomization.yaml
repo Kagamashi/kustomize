@@ -1,3 +1,6 @@
+# Kustomize looks for kustomization.yaml file
+
+# RESOURCES to be managed by kustomize
 resources:
   - deployment.yaml
   - service.yaml
@@ -19,6 +22,23 @@ commonLabels:
 
 
 # PATCHES
+patches:
+- path: patch.yaml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: deploy.*
+    labelSelector: "env=dev"
+    annotationSelector: "zone=west"
+- patch: |-
+    - op: replace
+      path: /some/existing/path
+      value: new value    
+  target:
+    kind: MyKind
+    labelSelector: "env=dev"
+
 patchesStrategicMerge:
   - patch.yaml
 
